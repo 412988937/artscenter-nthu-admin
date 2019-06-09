@@ -13,7 +13,7 @@ const name = defaultSettings.title || 'vue Admin Template' // page title
 const port = 9528 // dev port
 
 // Api url
-const ARTSCENTER_API_URL = 'https://arts.nthu.edu.tw/api'
+const ARTSCENTER_API_URL = 'http://127.0.0.1:8080/api'
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
@@ -40,12 +40,18 @@ module.exports = {
       // change xxx-api/login => mock/login
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API+'/exhibitions']:{
-        target: ARTSCENTER_API_URL,
+        target: process.env.VUE_APP_BASE_URL + process.env.VUE_APP_BASE_API,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
-      }
-      ,[process.env.VUE_APP_BASE_API]: {
+      },
+      [process.env.VUE_APP_BASE_API+'/user']:{
+        target: process.env.VUE_APP_BASE_URL + process.env.VUE_APP_BASE_API,
+        pathRewrite: {
+          ['^' + process.env.VUE_APP_BASE_API]: ''
+        }
+      },
+      [process.env.VUE_APP_BASE_API]: {
         target: `http://127.0.0.1:${port}/mock`,
         changeOrigin: true,
         pathRewrite: {

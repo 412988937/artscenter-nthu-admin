@@ -14,3 +14,24 @@ export function fetchExhibition(id) {
     method: 'get',
   })
 }
+
+export function createExhibition(data, token) {
+  return request({
+    url: '/exhibitions',
+    method: 'post',
+    data,
+    headers:{
+      token: token
+    }
+  })
+}
+
+export function deleteExhibition(id,token) {
+  return request({
+    url: '/exhibitions/' + id,
+    method: 'delete',
+    headers:{
+      token: token
+    }
+  })
+}

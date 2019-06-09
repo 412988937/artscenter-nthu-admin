@@ -1,117 +1,121 @@
 <template>
   <div class="createPost-container">
-    <el-form labelPosition="left" ref="postForm" :model="postForm" class="form-container" label-width="80px">
+    <el-form labelPosition="left" ref="postForm" :model="postForm" class="form-container" label-width="80px" :rules="rules">
+      <sticky :z-index="10" class="sub-navbar draft">
+        <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
+          Publish
+        </el-button>
+        <el-button v-loading="loading" type="warning" @click="draftForm">
+          Draft
+        </el-button>
+      </sticky>
       <div class="createPost-main-container">
-        <sticky :z-index="10" :class-name="'sub-navbar '+postForm.status">
-          <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
-            Publish
-          </el-button>
-          <el-button v-loading="loading" type="warning" @click="draftForm">
-            Draft
-          </el-button>
-        </sticky>
-        <div class="postInfo-container" style="width: 80%;">
-          <el-form-item label="活動類型">
-            <el-select v-model="postForm.type" placeholder="活動類型">
-              <el-option label="公共藝術" value="public_art"></el-option>
-              <el-option label="視覺藝術" value="visual_art"></el-option>
-              <el-option label="表演藝術" value="show"></el-option>
-              <el-option label="電影藝術" value="film"></el-option>
-            </el-select>
-          </el-form-item>
+        <el-row>
+          <el-col :span="16">
+            <div class="postInfo-container">
+
+              <el-form-item label="活動類型">
+                <el-select v-model="postForm.type" placeholder="活動類型">
+                  <el-option label="公共藝術" value="public_art"></el-option>
+                  <el-option label="視覺藝術" value="visual_art"></el-option>
+                  <el-option label="表演藝術" value="show"></el-option>
+                  <el-option label="電影藝術" value="film"></el-option>
+                </el-select>
+              </el-form-item>
+
+              <el-row>
+                <el-col :span="10">
+                  <el-form-item label="標題" prop="title">
+                    <el-input v-model="postForm.title"></el-input>
+                  </el-form-item>
+                  <el-form-item label="副標題">
+                    <el-input v-model="postForm.subtitle"></el-input>
+                  </el-form-item>
+                  <el-form-item label="主辦">
+                    <el-input v-model="postForm.host"></el-input>
+                  </el-form-item>
+                   <el-form-item label="展演者" prop="performer">
+                    <el-input v-model="postForm.performer"></el-input>
+                  </el-form-item>
+                  <el-form-item label="地點">
+                    <el-input v-model="postForm.location"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="10" :offset="1">
+                  <el-form-item label="title">
+                    <el-input v-model="postForm.en_title"></el-input>
+                  </el-form-item>
+                  <el-form-item label="subtitle">
+                    <el-input v-model="postForm.en_subtitle"></el-input>
+                  </el-form-item>
+                  <el-form-item label="host">
+                    <el-input v-model="postForm.en_subtitle"></el-input>
+                  </el-form-item>
+                  <el-form-item label="performer">
+                    <el-input v-model="postForm.en_performer"></el-input>
+                  </el-form-item>
+                  <el-form-item label="location">
+                    <el-input v-model="postForm.en_location"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
 
 
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="標題">
-                <el-input v-model="postForm.title"></el-input>
+              <el-form-item label="開始時間" prop="start_date">
+                <el-col :span="6">
+                  <el-date-picker type="date" placeholder="選擇日期" v-model="postForm.start_date" style="width: 100%;"></el-date-picker>
+                </el-col>
+                <el-col class="line" :span="2"></el-col>
+                <el-col :span="6" :offset="1">
+                  <el-time-picker placeholder="選擇時間" v-model="postForm.daily_start_time" style="width: 100%;"></el-time-picker>
+                </el-col>
               </el-form-item>
-            </el-col>
-            <el-col :span="8" :offset="1">
-              <el-form-item label="title">
-                <el-input v-model="postForm.en_title"></el-input>
+              <el-form-item label="結束時間">
+                <el-col :span="6">
+                  <el-date-picker type="date" placeholder="選擇日期" v-model="postForm.end_date" style="width: 100%;"></el-date-picker>
+                </el-col>
+                <el-col class="line" :span="2"></el-col>
+                <el-col :span="6" :offset="1">
+                  <el-time-picker placeholder="選擇時間" v-model="postForm.daily_end_time" style="width: 100%;"></el-time-picker>
+                </el-col>
               </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="副標題">
-                <el-input v-model="postForm.subtitle"></el-input>
+              <el-form-item label="售票資訊">
+                <el-input v-model="postForm.ticket_info"></el-input>
               </el-form-item>
-            </el-col>
-            <el-col :span="8" :offset="1">
-              <el-form-item label="subtitle">
-                <el-input v-model="postForm.en_subtitle"></el-input>
+              <el-form-item label="報名連結">
+                <el-input v-model="postForm.registration_link"></el-input>
               </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="主辦">
-                <el-input v-model="postForm.host"></el-input>
+              <el-form-item label="描述" prop="description">
+                <markdown-editor v-model="postForm.description" />
               </el-form-item>
-            </el-col>
-            <el-col :span="8" :offset="1">
-              <el-form-item label="host">
-                <el-input v-model="postForm.en_subtitle"></el-input>
+              <el-form-item label="description">
+                <markdown-editor v-model="postForm.en_description" />
               </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="展演者">
-                <el-input v-model="postForm.performer"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8" :offset="1">
-              <el-form-item label="performer">
-                <el-input v-model="postForm.en_performer"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="地點">
-                <el-input v-model="postForm.location"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8" :offset="1">
-              <el-form-item label="location">
-                <el-input v-model="postForm.en_location"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="開始時間">
-            <el-col :span="6">
-              <el-date-picker type="date" placeholder="選擇日期" v-model="postForm.start_date" style="width: 100%;"></el-date-picker>
-            </el-col>
-            <el-col class="line" :span="2">-</el-col>
-            <el-col :span="6">
-              <el-time-picker placeholder="選擇时间" v-model="postForm.daily_start_time" style="width: 100%;"></el-time-picker>
-            </el-col>
-          </el-form-item>
-          <el-form-item label="結束時間">
-            <el-col :span="6">
-              <el-date-picker type="date" placeholder="選擇日期" v-model="postForm.end_date" style="width: 100%;"></el-date-picker>
-            </el-col>
-            <el-col class="line" :span="2">-</el-col>
-            <el-col :span="6">
-              <el-time-picker placeholder="選擇时间" v-model="postForm.daily_end_time" style="width: 100%;"></el-time-picker>
-            </el-col>
-          </el-form-item>
-          <el-form-item label="售票資訊">
-            <el-input v-model="postForm.ticket_info"></el-input>
-          </el-form-item>
-          <el-form-item label="報名連結">
-            <el-input v-model="postForm.registration_link"></el-input>
-          </el-form-item>
-          <el-form-item label="描述">
-            <markdown-editor v-model="postForm.description" />
-          </el-form-item>
-          <el-form-item label="description">
-            <markdown-editor v-model="postForm.en_description" />
-          </el-form-item>
-        </div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="封面圖片">
+              <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">Upload image</el-button>
+              <el-upload
+                ref="upload"
+                action="http://127.0.0.1:8080/api/medias"
+                :auto-upload=false
+                :on-success="getCoverResponse"
+                :headers="header"
+                :limit=1
+                list-type="picture-card"
+                :file-list="fileList"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove">
+
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </div>
     </el-form>
   </div>
@@ -120,6 +124,9 @@
 import MarkdownEditor from '@/components/MarkdownEditor'
 import Sticky from '@/components/Sticky'
 import { fetchExhibition } from '@/api/exhibition'
+import { createExhibition } from '@/api/exhibition'
+import { mapGetters } from 'vuex'
+import { Message } from 'element-ui'
 
 const defaultForm = {
   id:null,
@@ -157,7 +164,29 @@ export default {
   data() {
     return {
       postForm: Object.assign({}, defaultForm),
-      loading: false
+      loading: false,
+      dialogImageUrl: '',
+      dialogVisible: false,
+      header: {
+        token: this.$store.state.user.token
+      },
+      coverResponse: {},
+      fileList:[],
+      rules:{
+        title:[
+          { required: true, message: '請輸入活動名稱', trigger: 'blur' },
+        ],
+        start_date:[
+          { required: true, message: '請輸入開始日期', trigger: 'change'}
+        ],
+        performer:[
+          { required: true, message: '請輸入展演者', trigger: 'blur' }
+        ],
+        description:[
+          { required: true, message: '請輸入描述', trigger: 'blur' }
+        ]
+
+      }
     }
   },
   created() {
@@ -173,10 +202,22 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
+    getCoverResponse: function(response,file,fileList){
+      this.coverResponse = response
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
     fetchData(id){
       fetchExhibition(id).then(response => {
         console.log(response)
         this.postForm = response
+        console.log(process.env.VUE_APP_BASE_URL+"static/uploads/"+response.cover)
+        this.fileList.push({url: process.env.VUE_APP_BASE_URL+"/static/uploads/"+response.cover })
         // just for test
         //this.postForm.title += `   Article Id:${this.postForm.id}`
         //this.postForm.content_short += `   Article Id:${this.postForm.id}`
@@ -189,10 +230,29 @@ export default {
       })
 
     },
+    submitUpload(){
+      this.$refs.upload.submit()
+    },
     submitForm(){
+      this.$refs['postForm'].validate((valid) => {
+        if (valid) {
+          console.log(this.postForm)
+          console.log(this.coverResponse)
+          if(this.coverResponse.medias.id)
+            this.postForm["coverId"] = this.coverResponse.medias.id
+          console.log(this.postForm)
+          createExhibition(this.postForm,this.$store.state.user.token)
+          .then(response => {
+            this.$message('submit!')
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
 
     },
-    draftForm(){
+    draftForm() {
 
     }
   }
