@@ -22,7 +22,7 @@
               <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">Upload image</el-button>
                 <el-upload
                   ref="upload"
-                  action="http://127.0.0.1:8080/api/medias"
+                  :action="uploadURL"
                   :auto-upload=false
                   :on-success="getCoverResponse"
                   :headers="header"
@@ -156,6 +156,7 @@ export default {
   components: { MarkdownEditor, Sticky },
   data() {
     return {
+      uploadURL: process.env.VUE_APP_BASE_URL+process.env.VUE_APP_BASE_API+'/medias',
       postForm: Object.assign({}, defaultForm),
       loading: false,
       dialogImageUrl: '',
