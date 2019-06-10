@@ -5,13 +5,9 @@
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
           Publish
         </el-button>
-        <el-button v-loading="loading" type="warning" @click="draftForm">
-          Draft
-        </el-button>
       </sticky>
       <div class="createPost-main-container">
-        <el-row>
-          <el-col :span="16">
+
             <div class="postInfo-container">
 
               <el-form-item label="活動類型">
@@ -22,6 +18,26 @@
                   <el-option label="電影藝術" value="film"></el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item label="封面圖片">
+              <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">Upload image</el-button>
+                <el-upload
+                  ref="upload"
+                  action="http://127.0.0.1:8080/api/medias"
+                  :auto-upload=false
+                  :on-success="getCoverResponse"
+                  :headers="header"
+                  :limit=1
+                  list-type="picture-card"
+                  :file-list="fileList"
+                  :on-preview="handlePictureCardPreview"
+                  :on-remove="handleRemove">
+
+                  <i class="el-icon-plus"></i>
+                </el-upload>
+                <el-dialog :visible.sync="dialogVisible">
+                  <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
+            </el-form-item>
 
               <el-row>
                 <el-col :span="10">
@@ -92,30 +108,6 @@
                 <markdown-editor v-model="postForm.en_description" />
               </el-form-item>
             </div>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="封面圖片">
-              <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">Upload image</el-button>
-              <el-upload
-                ref="upload"
-                action="http://127.0.0.1:8080/api/medias"
-                :auto-upload=false
-                :on-success="getCoverResponse"
-                :headers="header"
-                :limit=1
-                list-type="picture-card"
-                :file-list="fileList"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove">
-
-                <i class="el-icon-plus"></i>
-              </el-upload>
-              <el-dialog :visible.sync="dialogVisible">
-                <img width="100%" :src="dialogImageUrl" alt="">
-              </el-dialog>
-            </el-form-item>
-          </el-col>
-        </el-row>
       </div>
     </el-form>
   </div>
@@ -127,6 +119,7 @@ import { fetchExhibition } from '@/api/exhibition'
 import { createExhibition } from '@/api/exhibition'
 import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
+import { isNullOrUndefined } from 'util';
 
 const defaultForm = {
   id:null,
@@ -238,7 +231,7 @@ export default {
         if (valid) {
           console.log(this.postForm)
           console.log(this.coverResponse)
-          if(this.coverResponse.medias.id)
+          if(typeof(this.coverResponse.medias) != 'undefined')
             this.postForm["coverId"] = this.coverResponse.medias.id
           console.log(this.postForm)
           createExhibition(this.postForm,this.$store.state.user.token)

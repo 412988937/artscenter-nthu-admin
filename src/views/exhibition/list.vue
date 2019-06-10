@@ -88,16 +88,29 @@ export default {
       })
     },
     handleDelete(id){
-      deleteExhibition(id,this.$store.state.user.token)
-      .then((res)=> {
-        for(var i=0;i<this.list.length;i++){
-          if(id == this.list[i].id){
-            this.list.splice(i,1)
-            break
-          }
-        }
-        this.$message('delete')
+      this.$confirm(`刪除id: ${id}`,  {
+        confirmButtonText: '確定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
+      .then(()=> {
+        deleteExhibition(id,this.$store.state.user.token)
+        .then((res)=> {
+          for(var i=0;i<this.list.length;i++){
+            if(id == this.list[i].id){
+              this.list.splice(i,1)
+              break
+            }
+          }
+          this.$message('刪除成功')
+        })
+      })
+      .catch(()=> {
+        this.$message('取消動作')
+      })
+      /*
+
+      */
     }
   }
 }
