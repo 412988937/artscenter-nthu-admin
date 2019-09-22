@@ -83,7 +83,13 @@
                 </el-col>
                 <el-col class="line" :span="2"></el-col>
                 <el-col :span="6" :offset="1">
-                  <el-time-picker placeholder="選擇時間" v-model="postForm.daily_start_time" style="width: 100%;"></el-time-picker>
+                  <el-time-picker
+                    placeholder="選擇時間"
+                    value-format="HH:mm:ss"
+                    v-model="postForm.daily_start_time"
+                    style="width: 100%;"
+                    >
+                  </el-time-picker>
                 </el-col>
               </el-form-item>
               <el-form-item label="結束時間">
@@ -92,7 +98,12 @@
                 </el-col>
                 <el-col class="line" :span="2"></el-col>
                 <el-col :span="6" :offset="1">
-                  <el-time-picker placeholder="選擇時間" v-model="postForm.daily_end_time" style="width: 100%;"></el-time-picker>
+                  <el-time-picker
+                    placeholder="選擇時間"
+                    v-model="postForm.daily_end_time"
+                    style="width: 100%;"
+                    value-format="HH:mm:ss"
+                  ></el-time-picker>
                 </el-col>
               </el-form-item>
               <el-form-item label="售票資訊">
