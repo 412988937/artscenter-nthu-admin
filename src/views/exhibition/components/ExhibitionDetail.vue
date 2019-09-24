@@ -65,7 +65,7 @@
                     <el-input v-model="postForm.en_subtitle"></el-input>
                   </el-form-item>
                   <el-form-item label="host">
-                    <el-input v-model="postForm.en_subtitle"></el-input>
+                    <el-input v-model="postForm.en_host"></el-input>
                   </el-form-item>
                   <el-form-item label="performer">
                     <el-input v-model="postForm.en_performer"></el-input>
@@ -128,6 +128,7 @@ import MarkdownEditor from '@/components/MarkdownEditor'
 import Sticky from '@/components/Sticky'
 import { fetchExhibition } from '@/api/exhibition'
 import { createExhibition } from '@/api/exhibition'
+import { updateExhibition } from '@/api/exhibition'
 import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
 import { isNullOrUndefined } from 'util';
@@ -246,10 +247,27 @@ export default {
           if(typeof(this.coverResponse.medias) != 'undefined')
             this.postForm["coverId"] = this.coverResponse.medias.id
           console.log(this.postForm)
-          createExhibition(this.postForm,this.$store.state.user.token)
-          .then(response => {
-            this.$message('submit!')
-          })
+          if(this.isEdit){
+            const id = this.$route.params && this.$route.params.id
+            updateExhibition(id, this.postForm, this.$store.state.user.token)
+            .then(response => {
+              this.$message('Edit')
+            })
+            .then(response => {
+              this.$router.push('ExhibitionList')
+            })
+          }
+          else{
+            createExhibition(this.postForm, this.$store.state.user.token)
+            .then(response => {
+              this.$message('submit!')
+            })
+            .then(response => {
+              this.$router.push('ExhibitionList')
+            })
+          }
+
+
         } else {
           console.log('error submit!!');
           return false;

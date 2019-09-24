@@ -26,6 +26,17 @@ export function createExhibition(data, token) {
   })
 }
 
+export function updateExhibition(id, data, token) {
+  return request({
+    url: '/exhibitions/'+id,
+    method: 'put',
+    data,
+    headers:{
+      token: token
+    }
+  })
+}
+
 export function deleteExhibition(id,token) {
   return request({
     url: '/exhibitions/' + id,
