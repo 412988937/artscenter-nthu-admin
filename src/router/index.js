@@ -92,6 +92,37 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/banner',
+    component: Layout,
+    redirect: '/banner/list',
+    name: 'Banner',
+    meta: {
+      title: 'Banner',
+      icon: 'table'
+    },
+    children: [
+      {
+        path: 'create',
+        component: () => import('@/views/banner/create'),
+        name: 'CreateBanner',
+        meta: { title: 'Create Banner', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/banner/edit'),
+        name: 'EditBanner',
+        meta: { title: 'Edit Banner', noCache: true, activeMenu: '/example/list' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/banner/list'),
+        name: 'BannerList',
+        meta: { title: 'Banner List', icon: 'list' }
+      }
+    ]
+  },
 
   {
     path: 'artscenter',

@@ -45,6 +45,12 @@ module.exports = {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
       },
+      [process.env.VUE_APP_BASE_API+'/banners']:{
+        target: process.env.VUE_APP_BASE_URL + process.env.VUE_APP_BASE_API,
+        pathRewrite: {
+          ['^' + process.env.VUE_APP_BASE_API]: ''
+        }
+      },
       [process.env.VUE_APP_BASE_API+'/user']:{
         target: process.env.VUE_APP_BASE_URL + process.env.VUE_APP_BASE_API,
         pathRewrite: {
