@@ -8,23 +8,21 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="Author">
+      <el-table-column prop="start_date" width="120px" align="center" label="Media" sortable>
         <template slot-scope="scope">
-          <span>{{ scope.row.type }}</span>
+          <span>{{ scope.row.media.file }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="start_date" width="120px" align="center" label="Start date" sortable>
+      <el-table-column prop="start_date" width="120px" align="center" label="Exhibition" sortable>
         <template slot-scope="scope">
-          <span>{{ scope.row.start_date }}</span>
+          <span v-if="scope.row.exhibition">{{ scope.row.exhibition.title }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="300px" label="Title">
-        <template slot-scope="{row}">
-          <router-link :to="'/example/edit/'+row.id" class="link-type">
-            <span>{{ row.title }}</span>
-          </router-link>
+      <el-table-column prop="Media" align="center" label="Media">
+        <template slot-scope="scope">
+          <span><img height="100" :src="getMediaURL(scope.row.media.file)"></span>
         </template>
       </el-table-column>
 
@@ -81,7 +79,7 @@ export default {
     getList() {
       this.listLoading = true
       fetchList().then(response => {
-        console.log(response.length)
+        console.log(response)
         this.list = response
         this.total = response.length
         this.listLoading = false
@@ -111,6 +109,9 @@ export default {
       /*
 
       */
+    },
+    getMediaURL(filename) {
+      return process.env.VUE_APP_BASE_URL + "/static/uploads/" + filename
     }
   }
 }

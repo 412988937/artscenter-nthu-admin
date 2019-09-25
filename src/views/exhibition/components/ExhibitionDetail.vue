@@ -19,11 +19,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="封面圖片">
-              <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">Upload image</el-button>
+              <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">Upload image</el-button>-->
                 <el-upload
                   ref="upload"
                   :action="uploadURL"
-                  :auto-upload=false
                   :on-success="getCoverResponse"
                   :headers="header"
                   :limit=1
@@ -242,8 +241,6 @@ export default {
     submitForm(){
       this.$refs['postForm'].validate((valid) => {
         if (valid) {
-          console.log(this.postForm)
-          console.log(this.coverResponse)
           if(typeof(this.coverResponse.medias) != 'undefined')
             this.postForm["coverId"] = this.coverResponse.medias.id
           console.log(this.postForm)
