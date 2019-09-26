@@ -8,7 +8,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="Author">
+      <el-table-column width="120px" align="center" label="Type">
         <template slot-scope="scope">
           <span>{{ scope.row.type }}</span>
         </template>

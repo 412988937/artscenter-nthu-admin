@@ -207,6 +207,17 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
+    timeformating(time) {
+      if(time == null)  return null
+      else if(typeof(time)!= "undefined") {
+          var new_time = time.split(':')
+          var time_zone_time = parseInt(new_time[0]) + 8
+          if(time_zone_time > 24)  time_zone_time-=24
+          return time_zone_time.toString() + ':' + new_time[1] + ':' + new_time[2]
+      }
+      else
+          return null
+    },
     getCoverResponse: function(response,file,fileList){
       this.coverResponse = response
     },
@@ -220,9 +231,14 @@ export default {
     fetchData(id){
       fetchExhibition(id).then(response => {
         console.log(response)
+        console.log(response.daily_start_time)
+        console.log(response.daily_end_time)
+        response['daily_start_time'] = this.timeformating(response.daily_start_time)
+        response['daily_end_time'] = this.timeformating(response.daily_end_time)
         this.postForm = response
-        console.log(process.env.VUE_APP_BASE_URL+"static/uploads/"+response.cover)
-        this.fileList.push({url: process.env.VUE_APP_BASE_URL+"/static/uploads/"+response.cover })
+        console.log(response)
+        console.log(process.env.VUE_APP_BASE_URL+"/static/uploads/"+response.cover.file)
+        this.fileList.push({url: process.env.VUE_APP_BASE_URL+"/static/uploads/"+response.cover.file })
         // just for test
         //this.postForm.title += `   Article Id:${this.postForm.id}`
         //this.postForm.content_short += `   Article Id:${this.postForm.id}`
@@ -251,7 +267,7 @@ export default {
               this.$message('Edit')
             })
             .then(response => {
-              this.$router.push('ExhibitionList')
+              this.$router.push({name:'ExhibitionList'})
             })
           }
           else{
@@ -260,7 +276,7 @@ export default {
               this.$message('submit!')
             })
             .then(response => {
-              this.$router.push('ExhibitionList')
+              this.$router.push({name:'ExhibitionList'})
             })
           }
 
