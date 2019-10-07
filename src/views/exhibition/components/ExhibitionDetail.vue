@@ -18,6 +18,7 @@
                   <el-option label="電影藝術" value="film"></el-option>
                 </el-select>
               </el-form-item>
+
               <el-form-item label="封面圖片">
               <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">Upload image</el-button>-->
                 <el-upload
@@ -111,6 +112,12 @@
               <el-form-item label="報名連結">
                 <el-input v-model="postForm.registration_link"></el-input>
               </el-form-item>
+              <el-form-item label="活動圖片">
+                <group-upload
+                :groupFileList="groupFileList"
+                @update-fileList="getUpdateFileList"
+                />
+              </el-form-item>
               <el-form-item label="描述" prop="description">
                 <markdown-editor v-model="postForm.description" />
               </el-form-item>
@@ -128,9 +135,11 @@ import Sticky from '@/components/Sticky'
 import { fetchExhibition } from '@/api/exhibition'
 import { createExhibition } from '@/api/exhibition'
 import { updateExhibition } from '@/api/exhibition'
+import { updateMedia } from '@/api/media'
 import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
 import { isNullOrUndefined } from 'util';
+import GroupUpload from '../components/GroupUpload.vue'
 
 const defaultForm = {
   id:null,
@@ -164,7 +173,7 @@ export default {
       default: false
     }
   },
-  components: { MarkdownEditor, Sticky },
+  components: { MarkdownEditor, Sticky, GroupUpload },
   data() {
     return {
       uploadURL: process.env.VUE_APP_BASE_URL+process.env.VUE_APP_BASE_API+'/medias',
@@ -177,6 +186,7 @@ export default {
       },
       coverResponse: {},
       fileList:[],
+      groupFileList:[],
       rules:{
         title:[
           { required: true, message: '請輸入活動名稱', trigger: 'blur' },
@@ -218,6 +228,10 @@ export default {
       else
           return null
     },
+    getUpdateFileList(fileList) {
+      //console.log(fileList)
+      this.groupFileList = fileList
+    },
     getCoverResponse: function(response,file,fileList){
       this.coverResponse = response
     },
@@ -239,6 +253,14 @@ export default {
         console.log(response)
         console.log(process.env.VUE_APP_BASE_URL+"/static/uploads/"+response.cover.file)
         this.fileList.push({url: process.env.VUE_APP_BASE_URL+"/static/uploads/"+response.cover.file })
+        response.groupImages.forEach((media) => {
+          var newFile = {}
+          newFile['response'] = {}
+          newFile['response']['medias'] = media
+          newFile['url'] = process.env.VUE_APP_BASE_URL+"/static/uploads/" + media.file
+          this.groupFileList.push(newFile)
+        })
+        console.log(this.groupFileList)
         // just for test
         //this.postForm.title += `   Article Id:${this.postForm.id}`
         //this.postForm.content_short += `   Article Id:${this.postForm.id}`
@@ -255,13 +277,21 @@ export default {
       this.$refs.upload.submit()
     },
     submitForm(){
+      console.log(this.groupFileList)
       this.$refs['postForm'].validate((valid) => {
         if (valid) {
           if(typeof(this.coverResponse.medias) != 'undefined')
             this.postForm["coverId"] = this.coverResponse.medias.id
-          console.log(this.postForm)
+          //console.log(this.fileGroupList)
+          //console.log(this.postForm)
           if(this.isEdit){
             const id = this.$route.params && this.$route.params.id
+            this.groupFileList = this.groupFileList.map(file => {
+              if(file.response.medias.id){
+                return file.response.medias.id
+              }
+            })
+            this.postForm['groupImages'] = this.groupFileList
             updateExhibition(id, this.postForm, this.$store.state.user.token)
             .then(response => {
               this.$message('Edit')

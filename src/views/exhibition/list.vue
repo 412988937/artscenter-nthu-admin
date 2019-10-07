@@ -10,13 +10,25 @@
 
       <el-table-column width="120px" align="center" label="Type">
         <template slot-scope="scope">
-          <span>{{ scope.row.type }}</span>
+          <span>{{ convertType(scope.row.type) }}</span>
         </template>
       </el-table-column>
 
       <el-table-column prop="start_date" width="120px" align="center" label="Start date" sortable>
         <template slot-scope="scope">
           <span>{{ scope.row.start_date }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column width="120px" align="center" label="Start time" sortable>
+        <template slot-scope="scope">
+          <span>{{ scope.row.daily_start_time }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column width="120px" align="center" label="End time" sortable>
+        <template slot-scope="scope">
+          <span>{{ scope.row.daily_end_time }}</span>
         </template>
       </el-table-column>
 
@@ -111,6 +123,14 @@ export default {
       /*
 
       */
+    },
+    /* typeFormatting
+    */
+    convertType: function(type){
+      if(type=="public_art") return "公共藝術"
+      else if(type=="visual_art") return "視覺藝術"
+      else if(type=="show") return "表演藝術"
+      else if(type=="film") return "電影藝術"
     }
   }
 }
